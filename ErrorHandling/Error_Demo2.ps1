@@ -1,9 +1,7 @@
 <#
 .DESCRIPTION
 
-    File: Demo2.ps1
-
-    Main concepts covered here: 
+    Main concepts covered here:
     -- Error Variable
     -- Re-throwing Errors
     -- Catching Typed Errors
@@ -27,7 +25,7 @@ $Error.Clear()
 function Test-Error {
     [CmdletBinding()]
     param ( )
-    
+
     try {
         Clear-Host
         Get-Item -Path "G:\FakeItem" -ErrorAction Stop
@@ -49,7 +47,7 @@ Test-Error
 function Test-Error {
     [CmdletBinding()]
     param ( )
-    
+
     try {
         Clear-Host
         Get-Item -Path "G:\FakeItem" -ErrorAction Stop
@@ -68,7 +66,7 @@ Test-Error
 
 
 <#
-Each error exception has a type, which can be viewed by using the GetType() method. 
+Each error exception has a type, which can be viewed by using the GetType() method.
 Not all errors are well typed, but for the ones that are, it can be very useful to catch them and then do something specific.
 
 Catching a well typed error, can be an alternative way to writing a complicated IF statement.
@@ -91,7 +89,7 @@ $Error[0].Exception.GetType().FullName
 function Test-Error {
     [CmdletBinding()]
     param ( )
-    
+
     try {
         Clear-Host
         Get-ADUserFake
@@ -112,7 +110,7 @@ Test-Error
 function Test-Error {
     [CmdletBinding()]
     param ( )
-    
+
     try {
         Clear-Host
         Get-Item -Path "G:\FakeItem" -ErrorAction Stop
@@ -137,7 +135,7 @@ Test-Error
 function Test-Error {
     [CmdletBinding()]
     param ( )
-    
+
     try {
         Clear-Host
         Get-ADUserFake
@@ -162,7 +160,7 @@ Test-Error
 function Test-Error {
     [CmdletBinding()]
     param ( )
-    
+
     try {
         Clear-Host
         Get-Item -Path "G:\FakeItem" -ErrorAction Stop

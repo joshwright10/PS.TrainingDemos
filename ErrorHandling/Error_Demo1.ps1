@@ -1,5 +1,6 @@
 <#
 .DESCRIPTION
+
     This code provides an introduction to PowerShell errors and provides a few examples
     which are helpful to understand their behaviour.
 

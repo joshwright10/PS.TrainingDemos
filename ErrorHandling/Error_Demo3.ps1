@@ -1,8 +1,6 @@
 <#
 .DESCRIPTION
 
-    File: Demo3.ps1
-
     Main concepts covered here:
     -- Silencing Errors
     -- Forcing a Terminating Error
