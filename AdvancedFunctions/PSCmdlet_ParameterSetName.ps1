@@ -10,7 +10,7 @@
 <#
 $PSCmdlet provides a number built-in features which can help provide built-in error handling with very little work.
 In this section, we will take a look at $PSCmdlet along with ParameterSetName
-This works in a similar way to $PSBoundParameters in terms of checking what has been specified in the prarm block.
+This works in a similar way to $PSBoundParameters in terms of checking what has been specified in the parm block.
 In order to demonstrate this, I will also show how ParameterSetName are used.
 #>
 
