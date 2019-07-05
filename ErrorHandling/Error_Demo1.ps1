@@ -14,6 +14,7 @@
 
 $ErrorActionPreference
 Get-FakeCommand
+Write-Host "This will execute" -ForegroundColor Yellow
 
 $ErrorActionPreference = "SilentlyContinue"
 Get-FakeCommand
@@ -99,6 +100,7 @@ function Test-Error {
 # NOTE: The Error is still placed into the error variable
 $Error.Clear()
 Test-Error
+$Error[0]
 
 <#
 Introduction to the finally block
