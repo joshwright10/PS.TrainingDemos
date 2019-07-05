@@ -103,7 +103,6 @@ function Test-Error {
 
         function Write-BadError { Write-Error -Message "error" }
         Write-BadError
-        # MISSING EXAMPLE of .NET that does not produce a terminating error.
     }
     catch {
         Write-Host "Don't worry, nobody will see your mistake ;) " -ForegroundColor Magenta
@@ -124,10 +123,12 @@ function Test-Error {
         Write-BadError
     }
     catch {
+        Write-Host "`$ErrorActionPreference is set to $($ErrorActionPreference)" -ForegroundColor Yellow
         Write-Host "Don't worry, nobody will see your mistake ;) " -ForegroundColor Magenta
     }
     finally {
         $ErrorActionPreference = "Continue"
+        Write-Host "`$ErrorActionPreference is set to $($ErrorActionPreference)" -ForegroundColor Yellow
     }
 }
 
