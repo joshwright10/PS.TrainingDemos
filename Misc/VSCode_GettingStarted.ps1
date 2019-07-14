@@ -62,6 +62,9 @@
 
 <# Useful Shortcuts
 
+    -- Ctrl  + K +  C / Ctrl  + K +  U
+    --- Comment out selected lines / Uncomment selected lines
+
     -- Ctrl + Shift + P / F1
     --- Show All Commands
 
