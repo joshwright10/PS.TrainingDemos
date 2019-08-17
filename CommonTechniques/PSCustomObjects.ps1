@@ -11,6 +11,8 @@
     -- Updating Objects
     -- Updating existing objects
     -- PSObject.Copy()
+    -- Basic introduction to Script Methods
+    -- Basic introduction to formatting and TypeNames
 
     Extra resources with useful information:
         https://powershellexplained.com/2016-10-28-powershell-everything-you-wanted-to-know-about-pscustomobject/
@@ -91,4 +93,133 @@ $Folder | Add-Member -MemberType NoteProperty -Name Owner -Value (Get-Acl -Path 
 $Folder | Select-Object FullName, CreationTime, Owner
 
 
+#############################
 # PSObject.Copy()
+#############################
+# PSObject.Copy() makes a clone of the object, which is separate from the original object.
+# If you take an object and place it into a variable, this is just a reference to the original object.
+# Changes to the new variable are actually made to the original object.
+
+# For example, we are going to place the $Apple object into a new variable and change the name.
+# We will see that the changes are not independent.
+$Apple = [PSCustomObject]@{
+    Name          = 'Apple'
+    Type          = 'Fruit'
+    Healthy       = $True
+    "Price (USD)" = '0.66'
+}
+
+$OtherApple = $Apple
+
+# Check the values of each variable
+$Apple
+$OtherApple
+
+# Update the name of the Name property for the object in the new variable
+$OtherApple.Name = "Red Apple"
+
+# Check what both variables look like now. Both have been updated.
+$OtherApple
+$Apple
+
+# Let's do that the other way around.
+$Apple.Name = "Green Apple"
+
+# As you see, we see the same result.
+# These objects are have different variables but they reference eachother.
+$OtherApple
+$Apple
+
+# To actually get different objects, use the PSObject.Copy() method.
+$OtherApple = $Apple.PSObject.Copy()
+
+# Check the values of each variable
+$Apple
+$OtherApple
+
+# Update the name of the Name property for the object in the new variable
+$OtherApple.Name = "Red Apple"
+
+# Check what both variables look like now.
+# Now we see that these are now independent objects.
+$OtherApple
+$Apple
+
+
+
+#############################
+# ScriptMethod
+#############################
+# Script Methods offer a PowerShell native way to quickly add Methods to an object.
+# Although Methods can be very useful in PowerShell, it is probably unlikley that you will need to use ScriptMethod unless you are trying to build very advanced functions.
+
+# Here we create a very simple method that updates the price property.
+$Object = [PSCustomObject]@{
+    Name          = 'Apple'
+    Type          = 'Fruit'
+    Healthy       = $True
+    "Price (USD)" = '0.66'
+}
+$ScriptBlock = {
+    param([double]$Value)
+    $this."Price (USD)" = [double]$this."Price (USD)" + $Value
+}
+$Object | Add-Member -MemberType ScriptMethod -Name 'UpdatePrice' -Value $ScriptBlock
+
+$Object
+$Object.UpdatePrice(1)
+
+
+
+#############################
+# Bonus - Formatting / TypeNames
+#############################
+
+# Ever wondered why not all of the properties show on a lot of objects and you need to use Format-List in order to show them?
+# This is controlled by DataTypes and Formatting Files.
+# We can give our objects custom PSTypeNames, which can then be used to define the properties that are shown, plus a bunch of other things.
+
+# Here we give our object a PSTypeName and then update the TypeData used in the session to manipulate this object.
+$Object = [PSCustomObject]@{
+    PSTypeName    = 'CustomObject.Food'
+    Name          = 'Apple'
+    Type          = 'Fruit'
+    Healthy       = $True
+    "Price (USD)" = '0.66'
+}
+
+# This is what the object looks like without any changes
+$Object
+
+# Now lets add some customisations for that TypeName
+$TypeData = @{
+    TypeName                  = 'CustomObject.Food'
+    DefaultDisplayPropertySet = 'Name', 'Price (USD)'
+}
+Update-TypeData @TypeData
+
+# Here we can now see that we only display two properties by default.
+# If we want more, we can use Format-List
+$Object
+$Object | Format-List *
+
+# For more advanced scenarios, we might want to use a formatting file which is an xml file with the extension .format.ps1xml
+# These are generally used in PowerShell modules, as the format is defined in a file and then objects in the module inherit this when their TypeName matches.
+
+# In this example, we take the same object as before, but with a differnt TypeName
+$Object = [PSCustomObject]@{
+    PSTypeName    = 'My.Food'
+    Name          = 'Apple'
+    Type          = 'Fruit'
+    Healthy       = $True
+    "Price (USD)" = '0.66'
+}
+
+# Again, check what the object looks like first
+$Object
+
+# Now, we import the formatting file into our session.
+Update-FormatData -AppendPath "C:\Git\GitHub\PS.TrainingDemos\CommonTechniques\My.Food.format.ps1xml"
+
+# Now we see that the changes in the formatting file have been applied to our object.
+$Object
