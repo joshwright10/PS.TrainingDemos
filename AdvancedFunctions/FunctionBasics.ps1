@@ -45,6 +45,7 @@ function Invoke-AdvancedFunction {
     [CmdletBinding()]
     param()
     Write-Host "I'm an Advanced PowerShell Function." -ForegroundColor Magenta
+    Write-Verbose "This is a verbose message"
 }
 
 Invoke-AdvancedFunction
@@ -91,7 +92,7 @@ function Test-ParameterValidation {
         $Parameter2
     )
     Write-Host "Parameter1 Value: $($Parameter1)"
-    Write-Host "Parameter1 Value: $($Parameter2)"
+    Write-Host "Parameter2 Value: $($Parameter2)"
 }
 
 Test-ParameterValidation "Position 0" "Position 1"
@@ -140,13 +141,53 @@ function Test-ParameterValidation {
 Test-ParameterValidation -FullName "Johnny Doe" -Age 11 -Gender "N/A"
 Test-ParameterValidation -FullName "Johnny Doe" -Age 11 -Gender "Male"
 
+
+
 <# Comment Based Help
 ##################
+https://blogs.msdn.microsoft.com/koryt/2018/04/24/doing-more-with-functions-comment-based-help/
 
+The comment block can be placed either before the function, just inside, or at the bottom of the function.
+I prefer to place the comment block just inside the function statement, after the opening curly brace and before the param block.
 
 #>
 
+# A Function without Comment Based Help
+# By default, PowerShell will try to build help for your function by using what it already knows.
+function Test-CommentHelp {
+    param(
+        [string]$ComputerName,
+        [IPAddress]$IPAddress
+    )
+}
 
+Get-Help -Name Test-CommentHelp -ShowWindow
+
+
+# A Function with Comment Based Help
+function Test-CommentHelp {
+    <#
+    .SYNOPSIS
+        Demo function with no content. Used to demonstrate the use of comment based help for a function with parameters.
+
+    .PARAMETER ComputerName
+        Specifies the computer name.
+
+    .PARAMETER IPAddress
+        Specifies the IP Address of the computer to be targeted.
+
+    .EXAMPLE
+        PS C:\> Test-CommentHelp -ComputerName "PC01"
+        Demonstrates the comment based help against against the specified computer.
+
+    #>
+    param(
+        [string]$ComputerName,
+        [IPAddress]$IPAddress
+    )
+}
+
+Get-Help -Name Test-CommentHelp -ShowWindow
 
 <# Begin/Process/End
 ##################
