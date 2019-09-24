@@ -213,6 +213,21 @@ It is completely optional, but would normally contain clean-up tasks such as dis
 # In this demo function, we see all three blocks in action and
 
 function Invoke-FunctionBlockDemo {
+    <#
+    .SYNOPSIS
+        Short description
+    .DESCRIPTION
+        Long description
+    .EXAMPLE
+        PS C:\> <example usage>
+        Explanation of what the example does
+    .INPUTS
+        Inputs (if any)
+    .OUTPUTS
+        Output (if any)
+    .NOTES
+        General notes
+    #>
     param(
         [parameter(ValueFromPipeline)]
         [int]$Number
@@ -257,3 +272,81 @@ Invoke-FunctionBlockDemo -Number 1, 2
 
 
 
+# Example Function
+function Get-DemoFileInfo {
+    <#
+    .SYNOPSIS
+        Gets the item at the specified location and the owner information.
+
+    .PARAMETER Path
+        Specifies the path to an item.
+
+    .EXAMPLE
+        PS C:\> Get-DemoFileInfo -Path "C:\Temp"
+        Gets the File and owner information for the C:\Temp folder.
+
+    .INPUTS
+        System.IO.FileInfo
+
+    .OUTPUTS
+        System.IO.DirectoryInfo or System.IO.FileInfo
+
+    #>
+    [CmdletBinding()]
+    param (
+        [Parameter(ValueFromPipeline,
+            ValueFromPipelineByPropertyName)]
+        [ValidateScript( {
+                if (-Not ($_ | Test-Path) ) {
+                    throw "File or folder does not exist."
+                }
+                return $true
+            })]
+        [System.IO.FileInfo[]]$Path
+
+    )
+
+    begin {
+
+        try {
+
+            # Import Required Modules
+            # NOTE: This is for demo purposes. I would not usually import basic modules like this one.
+            if (-not (Get-Module -Name Microsoft.PowerShell.Security -ErrorAction Ignore)) {
+                Import-Module -Name Microsoft.PowerShell.Security -ErrorAction Stop
+            }
+
+            Write-Verbose -Message "End of Begin Block"
+        }
+        catch {
+            $PSCmdlet.ThrowTerminatingError($PSItem)
+        }
+    }
+
+    process {
+        Write-Verbose -Message "Start of Process Block"
+        foreach ($Path in $Path) {
+            try {
+                $Item = Get-Item -Path $Path.FullName -ErrorAction Stop
+                $Item | Add-Member -MemberType NoteProperty -Name Owner -Value (Get-ACL -Path $Item.FullName).Owner
+                $Item
+            }
+            catch {
+                $PSCmdlet.WriteError($PSItem)
+            }
+        }
+    }
+}
+
+Get-Help -Name Get-DemoFileInfo -ShowWindow
+
+Get-DemoFileInfo -Path "C:\Temp" -Verbose | Select-Object FullName, Owner
+"C:\Temp" | Get-DemoFileInfo  -Verbose | Select-Object FullName, Owner
+
+Get-DemoFileInfo -Path "C:\Temp", "C:\Windows" -Verbose | Select-Object FullName, Owner
+"C:\Temp", "C:\Windows" | Get-DemoFileInfo  -Verbose | Select-Object FullName, Owner
+
+Get-DemoFileInfo -Path "C:\FakePath" -Verbose | Select-Object FullName, Owner
+
+Get-DemoFileInfo -Path "C:\Temp", "C:\Windows" -Verbose | Select-Object FullName, Owner
+"C:\Temp", "C:\FakePath", "C:\Windows" | Get-DemoFileInfo  -Verbose | Select-Object FullName, Owner
