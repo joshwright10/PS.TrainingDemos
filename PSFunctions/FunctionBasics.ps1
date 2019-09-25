@@ -210,7 +210,7 @@ It is completely optional, but would normally contain clean-up tasks such as dis
 #>
 
 # Block Demo
-# In this demo function, we see all three blocks in action and
+# In this demo function, we see all three blocks in action.
 
 function Invoke-FunctionBlockDemo {
     <#
@@ -257,8 +257,8 @@ function Invoke-FunctionBlockDemo {
         Write-Host "Executing Begin Block" -ForegroundColor Cyan
     }
     Process {
+        Write-Host "Executing Process Block" -ForegroundColor Green
         foreach ($Number in $Number) {
-            Write-Host "Executing Process Block" -ForegroundColor Green
             Write-Host "Processing Number: $($Number)" -ForegroundColor Yellow
         }
     }
@@ -348,5 +348,5 @@ Get-DemoFileInfo -Path "C:\Temp", "C:\Windows" -Verbose | Select-Object FullName
 
 Get-DemoFileInfo -Path "C:\FakePath" -Verbose | Select-Object FullName, Owner
 
-Get-DemoFileInfo -Path "C:\Temp", "C:\Windows" -Verbose | Select-Object FullName, Owner
+Get-DemoFileInfo -Path "C:\Temp", "C:\FakePath", "C:\Windows" -Verbose | Select-Object FullName, Owner
 "C:\Temp", "C:\FakePath", "C:\Windows" | Get-DemoFileInfo  -Verbose | Select-Object FullName, Owner
