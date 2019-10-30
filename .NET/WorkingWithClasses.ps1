@@ -18,6 +18,11 @@
     Extra resources with useful information:
         https://4sysops.com/wiki/useful-net-classes-for-powershell/
 
+
+    Requires:
+        Dowload .NET assembly / COM library from https://winscp.net/eng/downloads.php
+        Extract the ZIP to C:\Temp\WinSCPAutomation
+
 #>
 
 # It is usually possible to get the job done in PowerShell by just using Cmdlets and Functions.
@@ -113,7 +118,7 @@ $ADComputers
 # https://winscp.net/eng/docs/library_powershell
 #
 # We will first unblock the file to allow it to be loaded, then import it into the session.
-$WinSCPFile = "C:\Temp\WinSCP-5.15.5-Automation\WinSCPnet.dll"
+$WinSCPFile = "C:\Temp\WinSCPAutomation\WinSCPnet.dll"
 Get-ChildItem -Path (Split-Path $WinSCPFile -Parent) -Recurse | Unblock-File
 Add-Type -Path $WinSCPFile
 
